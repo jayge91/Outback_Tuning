@@ -7,79 +7,79 @@
 
 
 ;----------------adc----------------
-type=adc 					; log from built in ADC channels
-							; paramid is pin number on OBD connector
-							; valid pins are 8 and 16
-							; values are pre-scaled to millivolts
-							; on newer subarus pin 8 is connected to the ignition voltage
+type=adc 							; log from built in ADC channels
+									; paramid is pin number on OBD connector
+									; valid pins are 8 and 16
+									; values are pre-scaled to millivolts
+									; on newer subarus pin 8 is connected to the ignition voltage
 
-paramname = V_PIN8			; Eventually will be logging toggle input
-paramid = 8					; pin 8
-scalingrpn = x,0.001,* 		; here we scale to volts
+		paramname = V_PIN8			; Eventually will be logging toggle input
+			paramid = 8				; pin 8
+			scalingrpn = x,0.001,* 	; here we scale to volts
 
-paramname = V_BATT
-paramid = 16				; pin 16
-scalingrpn=x,0.001,*   		; here we scale to volts
-
-
-;----------------ascii----------------
-;type=ascii					; UART input
-							; Read at headphone jack TIP
-							; Pending testing - possiblY also OEM12
-
-;paramname = WB_AFR
-;paramid = 1				; using paramid 1 for the identifier (1 default for first innovate device)
+		paramname = V_BATT			; Pin 16 is always supplied with battery voltage
+			paramid = 16			; pin 16
+			scalingrpn=x,0.001,*   	; here we scale to volts
 
 
-;----------------  SSM LOGGING ----------------
+	;----------------ascii----------------
+	;type=ascii						; UART input
+									; Read at headphone jack TIP
+									; Pending testing - possiblY also OEM12
 
-;------  parameters  ------
-type=ssmk					; SSM K-line logging (eventual ssmcan (CAN) might work)
-
-;---  High Priority Log Items ---
-
-paramname = TPS				;Throttle Opening Angle (%)
-paramid = 0x000015
-databits = 8
-scalingrpn = x,0.392156862745098,*
-
-paramname = RPM			;Engine_Speed(RPM)
-paramid = 0x00000E
-databits = 16
-scalingrpn = x,0.25,*
-
-paramname = LOAD(g/rev)		; 4-Byte Load (Float Value)
-paramid = 0xFF50B0   
-isfloat = 1 ; the raw data is a 32-bit floating point number (no need to set databits = 32, or scalingrpn)
-
-paramname = MAF(g/s)		;Mass_Airflow*(g/s)
-paramid = 0x000013
-databits = 16
-scalingrpn = x,.01,*
-
-paramname = Mass_Airflow_Sensor(V)
-paramid = 0x00001D
-databits = 8
-scalingrpn = x,0.02,*
-
-paramname = Ignition_Total_Timing*
-paramid = 0x000011
-databits = 8
-scalingrpn = x,128,-,0.5,*
-
-paramname = MAP				; (Relative)
-paramid = 0x000024
-databits = 8
-;scalingrpn = x,128,-,37,*,255,/,0.0689475729,* 	; (BAR)
-scalingrpn = x,128,-,0.1450983015278421,* 			; (PSI)
+	;paramname = WB_AFR
+	;paramid = 1					; using paramid 1 for the identifier (1 default for first innovate device)
 
 
-;<ecuparam id="E39" name="Feedback Knock Correction (4-byte)*" desc="E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock." target="1">
-;0xFF5D14
-;<conversion units="degrees" storagetype="float" expr="x" format="0.00" gauge_min="-12" gauge_max="8" gauge_step="2" />
-paramname = Feedback_Knock_Correction*
-paramid = 0xFF5D14
-isfloat = 1
+	;----------------  SSM LOGGING ----------------
+
+	;------  parameters  ------
+	type = ssmk						; SSM K-line logging (eventual ssmcan (CAN) might work)
+
+	;---  High Priority Log Items ---
+
+	paramname = TPS					;Throttle Opening Angle (%)
+		paramid = 0x000015
+		databits = 8
+		scalingrpn = x,0.392156862745098,*
+
+	paramname = RPM					; Engine_Speed(RPM)
+		paramid = 0x00000E
+		databits = 16
+		scalingrpn = x,0.25,*
+
+	paramname = LOAD(g/rev)			; 4-Byte Load (Float Value)
+		paramid = 0xFF50B0   
+		isfloat = 1
+
+	paramname = MAF(g/s)			;Mass_Airflow*(g/s)
+		paramid = 0x000013
+		databits = 16
+		scalingrpn = x,.01,*
+
+	paramname = Mass_Airflow_Sensor(V)
+		paramid = 0x00001D
+		databits = 8
+		scalingrpn = x,0.02,*
+
+	paramname = Ignition_Total_Timing*
+		paramid = 0x000011
+		databits = 8
+		scalingrpn = x,128,-,0.5,*
+
+	paramname = MAP					; (Relative)
+		paramid = 0x000024
+		databits = 8
+		;scalingrpn = x,128,-,37,*,255,/,0.0689475729,* 	; (BAR)
+		scalingrpn = x,128,-,0.1450983015278421,* 			; (PSI)
+
+
+	;<ecuparam id="E39" name="Feedback Knock Correction (4-byte)*" desc="E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock." target="1">
+	;0xFF5D14
+	;<conversion units="degrees" storagetype="float" expr="x" format="0.00" gauge_min="-12" gauge_max="8" gauge_step="2" />
+	paramname = Feedback_Knock_Correction*
+		paramid = 0xFF5D14
+		isfloat = 1
 
 
 
@@ -113,54 +113,55 @@ isfloat = 1
 
 
 ;---  lower priority log items ---
-; --  sampgroup 1  –
+	; --  sampgroup 1  –
 
-paramname = Coolant_Temp(*F)
-paramid = 0x000008
-databits = 8
-sampgroup = 1
-;scalingrpn = x,40,- 							; (DegC)
-scalingrpn = x,9,*,200,-,0.2,* 					; (Deg F)
+	paramname = Coolant_Temp(*F)
+		paramid = 0x000008
+		databits = 8
+		sampgroup = 1
+		;scalingrpn = x,40,- 			; (DegC)
+		scalingrpn = x,9,*,200,-,0.2,* 	; (Deg F)
 
-paramname = VSS(MPH)
-paramid = 0x000010
-databits = 8
-sampgroup = 1
-;scalingrpn = x									; (km/h)
-scalingrpn = x;0.621371192,*					; (mph)
+	paramname = VSS(MPH)
+		paramid = 0x000010
+		databits = 8
+		sampgroup = 1
+		;scalingrpn = x					; (km/h)
+		scalingrpn = x;0.621371192,*	; (mph)
 
-paramname = IAT(*F)								;(Pre-Turbo, in airbox)
-paramid = 0x000012
-databits = 8
-sampgroup = 1
-;scalingrpn = x,40,- 							;(*C)
-scalingrpn = x,9,*,200,-,0.2,* 					;(*F)
+	paramname = IAT(*F)				;(Pre-Turbo, in airbox)
+		paramid = 0x000012
+		databits = 8
+		sampgroup = 1
+		;scalingrpn = x,40,- 							;(*C)
+		scalingrpn = x,9,*,200,-,0.2,* 					;(*F)
 
 
-; --  sampgroup 2  –
-paramname = Fine_Learning_Knock_Correction*
-paramid = 0x20C65
-databits = 8
-sampgroup = 2
-scalingrpn = x,.3515625,*,45,-
+	; --  sampgroup 2  –-
 
-paramname = IAM*
-paramid = 0x20120
-databits = 8
-sampgroup = 2
-scalingrpn = x
+	paramname = Fine_Learning_Knock_Correction*
+		paramid = 0x20C65
+		databits = 8
+		sampgroup = 2
+		scalingrpn = x,.3515625,*,45,-
 
-paramname = Intake_VVT_Adv_Angle_Left
-paramid = 0x00003D
-databits = 8
-sampgroup = 2
-scalingrpn = x,50,-
+	paramname = IAM*
+		paramid = 0x20120
+		databits = 8
+		sampgroup = 2
+		scalingrpn = x
 
-paramname = Intake_VVT_Adv_Angle_Right
-paramid = 0x00003C
-databits = 8
-sampgroup = 2
-scalingrpn = x,50,-
+	paramname = Intake_VVT_Adv_Angle_Left
+		paramid = 0x00003D
+		databits = 8
+		sampgroup = 2
+		scalingrpn = x,50,-
+
+	paramname = Intake_VVT_Adv_Angle_Right
+		paramid = 0x00003C
+		databits = 8
+		sampgroup = 2
+		scalingrpn = x,50,-
 
 
 
@@ -335,11 +336,11 @@ scalingrpn = x,50,-
 
 ;-------------calculated parameter---------------
 
-type = calc				; you can derive calculated parameters from other parameters
+;type = calc							; you can derive calculated parameters from other parameters
 ; using RPN expressions
 
-paramname = 	LOADCALC*(g/REV)	; Engine_Load*(g/REV)   Calculated from MAF and RPM
-scalingrpn = MAF(g/s),60,*,RPM,/	; "g/rev" (MAF*60)/RPM
+;	paramname = 	LOADCALC*(g/REV)	; Engine_Load*(g/REV)   Calculated from MAF and RPM
+;		scalingrpn = MAF(g/s),60,*,RPM,/
 			
 ;paramname = IDC
 ;scalingrpn = IPW,RPM,*,1200,/
@@ -378,7 +379,7 @@ scalingrpn = MAF(g/s),60,*,RPM,/	; "g/rev" (MAF*60)/RPM
 
 
 conditionrpn = RPM,0,>
-action = start
+	action = start
 
 conditionrpn = RPM,0,==
-action = stop
+	action = stop
