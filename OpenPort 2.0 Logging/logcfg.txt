@@ -4,6 +4,26 @@
 ; A2WC510S		2F12795206 **CURRENT**
 ; A2WC522S		2F12795606
 
+        <parameter id="E83" livedata="selected" units="%"/>
+        <parameter id="E85" livedata="selected" units="estimated AFR"/>
+        <parameter id="E87" livedata="selected" units="g/rev"/>
+        <parameter id="E92" livedata="selected" units="estimated AFR"/>
+        <parameter id="E95" livedata="selected" units="degrees"/>
+        <parameter id="P89" livedata="selected" units="%"/>
+        <parameter id="E33" livedata="selected" units="status"/>
+        <parameter id="P12" livedata="selected" units="g/s"/>
+        <parameter id="P13" livedata="selected" units="%"/>
+        <parameter id="P18" livedata="selected" units="V"/>
+        <parameter id="E44" livedata="selected" units="%"/>
+        <parameter id="E46" livedata="selected" units="%"/>
+        <parameter id="E45" livedata="selected" units="%"/>
+        <parameter id="E47" livedata="selected" units="%"/>
+        <parameter id="E114" livedata="selected" units="count"/>
+        <parameter id="E115" livedata="selected" units="estimated AFR"/>
+        <parameter id="E61" livedata="selected" units="offset"/>
+        <parameter id="E122" livedata="selected" units="estimated AFR"/>
+        <parameter id="E124" livedata="selected" units="estimated AFR"/>
+        <parameter id="E82" livedata="selected" units="%"/>
 
 
 ;----------------adc----------------
