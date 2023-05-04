@@ -1,0 +1,384 @@
+;Tactrix OpenPort 2.0 – logcfg.txt
+; CAL ID		ECU ID
+; A2WC500S		2F12795106
+; A2WC510S		2F12795206 **CURRENT**
+; A2WC522S		2F12795606
+
+
+
+;----------------adc----------------
+type=adc 					; log from built in ADC channels
+							; paramid is pin number on OBD connector
+							; valid pins are 8 and 16
+							; values are pre-scaled to millivolts
+							; on newer subarus pin 8 is connected to the ignition voltage
+
+paramname = V_PIN8			; Eventually will be logging toggle input
+paramid = 8					; pin 8
+scalingrpn = x,0.001,* 		; here we scale to volts
+
+paramname = V_BATT
+paramid = 16				; pin 16
+scalingrpn=x,0.001,*   		; here we scale to volts
+
+
+;----------------ascii----------------
+;type=ascii					; UART input
+							; Read at headphone jack TIP
+							; Pending testing - possiblY also OEM12
+
+;paramname = WB_AFR
+;paramid = 1				; using paramid 1 for the identifier (1 default for first innovate device)
+
+
+;----------------  SSM LOGGING ----------------
+
+;------  parameters  ------
+type=ssmk					; SSM K-line logging (eventual ssmcan (CAN) might work)
+
+;---  High Priority Log Items ---
+
+paramname = TPS				;Throttle Opening Angle (%)
+paramid = 0x000015
+databits = 8
+scalingrpn = x,0.392156862745098,*
+
+paramname = RPM			;Engine_Speed(RPM)
+paramid = 0x00000E
+databits = 16
+scalingrpn = x,0.25,*
+
+paramname = LOAD(g/rev)		; 4-Byte Load (Float Value)
+paramid = 0xFF50B0   
+isfloat = 1 ; the raw data is a 32-bit floating point number (no need to set databits = 32, or scalingrpn)
+
+paramname = MAF(g/s)		;Mass_Airflow*(g/s)
+paramid = 0x000013
+databits = 16
+scalingrpn = x,.01,*
+
+paramname = Mass_Airflow_Sensor(V)
+paramid = 0x00001D
+databits = 8
+scalingrpn = x,0.02,*
+
+paramname = Ignition_Total_Timing*
+paramid = 0x000011
+databits = 8
+scalingrpn = x,128,-,0.5,*
+
+paramname = MAP				; (Relative)
+paramid = 0x000024
+databits = 8
+;scalingrpn = x,128,-,37,*,255,/,0.0689475729,* 	; (BAR)
+scalingrpn = x,128,-,0.1450983015278421,* 			; (PSI)
+
+
+;<ecuparam id="E39" name="Feedback Knock Correction (4-byte)*" desc="E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock." target="1">
+;0xFF5D14
+;<conversion units="degrees" storagetype="float" expr="x" format="0.00" gauge_min="-12" gauge_max="8" gauge_step="2" />
+paramname = Feedback_Knock_Correction*
+paramid = 0xFF5D14
+isfloat = 1
+
+
+
+;<ecuparam id="E34" name="Turbo Dynamics Integral (4-byte)*" desc="E34-Current WG duty corr (ABS) applied by the Turbo Dynamics Integral tables to achieve target boost. Can be Cumulative" target="1">
+;0xFF4BF8
+;absolute %
+
+;<ecuparam id="E35" name="Boost Error*" desc="E35-Difference between target boost (post-compensations) and actual boost (target boost - actual boost)" target="1">
+;0xFF4BEC
+;<conversion units="psi" storagetype="float" expr="x*0.01933677" format="0.00" />
+;<conversion units="bar" storagetype="float" expr="x*0.001333224" format="0.000" />
+;<conversion units="mmHg" storagetype="float" expr="x" format="0" />
+;<conversion units="kPa" storagetype="float" expr="x*0.1333224" format="0.00" />
+
+;<ecuparam id="E36" name="Target Boost (4-byte)*" desc="E36-Current boost target as determined by the Target Boost table(s). This includes any compensation, if applicable." target="1">
+;0xFF4BF0
+;<conversion units="psi relative sea level" storagetype="float" expr="(x-760)*0.01933677" format="0.00" />
+;<conversion units="psi absolute" storagetype="float" expr="x*0.01933677" format="0.00" />
+;<conversion units="bar relative sea level" storagetype="float" expr="(x-760)*0.001333224" format="0.000" />
+;<conversion units="bar absolute" storagetype="float" expr="x*0.001333224" format="0.000" />
+;<conversion units="mmHg absolute" storagetype="float" expr="x" format="0" />
+;<conversion units="kPa absolute" expr="x*0.1333224" format="0.00" />
+
+;<ecuparam id="E37" name="Turbo Dynamics Proportional (4-byte)*" desc="E37-Current WG duty correction (absolute) that is being applied by the Turbo Dynamics Proportional table." target="1">
+;0xFF4BF4
+;<conversion units="absolute %" storagetype="float" expr="x" format="0.00" />
+
+
+
+
+
+
+;---  lower priority log items ---
+; --  sampgroup 1  –
+
+paramname = Coolant_Temp(*F)
+paramid = 0x000008
+databits = 8
+sampgroup = 1
+;scalingrpn = x,40,- 							; (DegC)
+scalingrpn = x,9,*,200,-,0.2,* 					; (Deg F)
+
+paramname = VSS(MPH)
+paramid = 0x000010
+databits = 8
+sampgroup = 1
+;scalingrpn = x									; (km/h)
+scalingrpn = x;0.621371192,*					; (mph)
+
+paramname = IAT(*F)								;(Pre-Turbo, in airbox)
+paramid = 0x000012
+databits = 8
+sampgroup = 1
+;scalingrpn = x,40,- 							;(*C)
+scalingrpn = x,9,*,200,-,0.2,* 					;(*F)
+
+
+; --  sampgroup 2  –
+paramname = Fine_Learning_Knock_Correction*
+paramid = 0x20C65
+databits = 8
+sampgroup = 2
+scalingrpn = x,.3515625,*,45,-
+
+paramname = IAM*
+paramid = 0x20120
+databits = 8
+sampgroup = 2
+scalingrpn = x
+
+paramname = Intake_VVT_Adv_Angle_Left
+paramid = 0x00003D
+databits = 8
+sampgroup = 2
+scalingrpn = x,50,-
+
+paramname = Intake_VVT_Adv_Angle_Right
+paramid = 0x00003C
+databits = 8
+sampgroup = 2
+scalingrpn = x,50,-
+
+
+
+;------------  untested section  ------------
+
+;<ecuparam id="E33" name="CL/OL Fueling*" desc="Fuel system status. [8 = Closed Loop (normal)] [10 = Open Loop (normal)] [7 = Open Loop due insufficient coolant temp] [14 = Open Loop due to system failure].">
+;<conversion units="status" expr="x+6" format="0"/>
+
+;paramname = CL/OL Fueling Status
+;paramid = 0xFF6F91
+;databits = 8
+;scalingrpn = x
+
+
+
+;<ecuparam id="E40" name="Knock Correction Advance (IAM only)*" desc="">
+;<address length="4">0xFF5D58</address>
+;<conversion units="degrees" storagetype="float" expr="x" format="0.00"/>
+;paramname = Knock Correction Advance (IAM only)
+
+;paramid = 0xFF5D58
+;databits = 16
+;scalingrpn = x
+
+;------  switches  ------
+
+;<switch id="S1" name="AT Vehicle ID" desc="" byte="0x000061" bit="6"/>
+
+;<switch id="S2" name="Test Mode Connector" desc="" byte="0x000061" bit="5"/>
+
+;<switch id="S3" name="Read Memory Connector" desc="" byte="0x000061" bit="4"/>
+
+;<switch id="S4" name="Neutral Position Switch" desc="" byte="0x000062" bit="7"/>
+
+;<switch id="S5" name="Idle Switch" desc="" byte="0x000062" bit="6"/>
+
+;<switch id="S6" name="Intercooler AutoWash Switch" desc="" byte="0x000062" bit="4"/>
+
+;<switch id="S7" name="Ignition Switch" desc="" byte="0x000062" bit="3"/>
+
+;<switch id="S8" name="Power Steering Switch" desc="" byte="0x000062" bit="2"/>
+
+;<switch id="S9" name="Air Conditioning Switch" desc="" byte="0x000062" bit="1"/>
+
+;<switch id="S10" name="Handle Switch" desc="" byte="0x000063" bit="7"/>
+
+;<switch id="S11" name="Starter Switch" desc="" byte="0x000063" bit="6"/>
+
+;<switch id="S12" name="Front O2 Rich Signal" desc="" byte="0x000063" bit="5"/>
+
+;<switch id="S13" name="Rear O2 Rich Signal" desc="" byte="0x000063" bit="4"/>
+
+;<switch id="S14" name="Front O2 #2 Rich Signal" desc="" byte="0x000063" bit="3"/>
+
+;<switch id="S15" name="Knock Signal 1" desc="" byte="0x000063" bit="2"/>
+
+;<switch id="S16" name="Knock Signal 2" desc="" byte="0x000063" bit="1"/>
+
+;<switch id="S17" name="Electrical Load Signal" desc="" byte="0x000063" bit="0"/>
+
+;<switch id="S18" name="Crank Position Sensor" desc="" byte="0x000064" bit="7"/>
+
+;<switch id="S19" name="Cam Position Sensor" desc="" byte="0x000064" bit="6"/>
+
+;<switch id="S20" name="Defogger Switch" desc="" byte="0x000064" bit="5"/>.
+;paramname = defogger_sw
+;paramid = 0x64
+;databits = 1
+;offsetbits = 5
+;isvisible = 0
+
+;<switch id="S21" name="Blower Switch" desc="" byte="0x000064" bit="4"/>
+
+;<switch id="S22" name="Interior Light Switch" desc="" byte="0x000064" bit="3"/>
+
+;<switch id="S23" name="Wiper Switch" desc="" byte="0x000064" bit="2"/>
+
+;<switch id="S24" name="Air-Con Lock Signal" desc="" byte="0x000064" bit="1"/>
+
+;<switch id="S25" name="Air-Con Mid Pressure Switch" desc="" byte="0x000064" bit="0"/>
+
+;<switch id="S26" name="Air-Con Compressor Signal" desc="" byte="0x000065" bit="7"/>
+
+;<switch id="S27" name="Radiator Fan Relay #3" desc="" byte="0x000065" bit="6"/>
+
+;<switch id="S28" name="Radiator Fan Relay #1" desc="" byte="0x000065" bit="5"/>
+
+;<switch id="S29" name="Radiator Fan Relay #2" desc="" byte="0x000065" bit="4"/>
+
+;<switch id="S30" name="Fuel Pump Relay" desc="" byte="0x000065" bit="3"/>
+
+;<switch id="S31" name="Intercooler Auto-Wash Relay" desc="" byte="0x000065" bit="2"/>
+
+;<switch id="S32" name="CPC Solenoid Valve" desc="" byte="0x000065" bit="1"/>
+
+;<switch id="S33" name="Blow-By Leak Connector" desc="" byte="0x000065" bit="0"/>
+
+;<switch id="S34" name="PCV Solenoid Valve" desc="" byte="0x000066" bit="7"/>
+
+;<switch id="S35" name="TGV Output" desc="" byte="0x000066" bit="6"/>
+
+;<switch id="S36" name="TGV Drive" desc="" byte="0x000066" bit="5"/>
+
+;<switch id="S37" name="Variable Intake Air Solenoid" desc="" byte="0x000066" bit="4"/>
+
+;<switch id="S38" name="Pressure Sources Change" desc="" byte="0x000066" bit="3"/>
+
+;<switch id="S39" name="Vent Solenoid Valve" desc="" byte="0x000066" bit="2"/>
+
+;<switch id="S40" name="P/S Solenoid Valve" desc="" byte="0x000066" bit="1"/>
+
+;<switch id="S41" name="Assist Air Solenoid Valve" desc="" byte="0x000066" bit="0"/>
+
+;<switch id="S42" name="Tank Sensor Control Valve" desc="" byte="0x000067" bit="7"/>
+
+;<switch id="S43" name="Relief Valve Solenoid 1" desc="" byte="0x000067" bit="6"/>
+
+;<switch id="S44" name="Relief Valve Solenoid 2" desc="" byte="0x000067" bit="5"/>
+
+;<switch id="S45" name="TCS Relief Valve Solenoid" desc="" byte="0x000067" bit="4"/>
+
+;<switch id="S46" name="Ex. Gas Positive Pressure" desc="" byte="0x000067" bit="3"/>
+
+;<switch id="S47" name="Ex. Gas Negative Pressure" desc="" byte="0x000067" bit="2"/>
+
+;<switch id="S48" name="Intake Air Solenoid" desc="" byte="0x000067" bit="1"/>
+
+;<switch id="S49" name="Muffler Control" desc="" byte="0x000067" bit="0"/>
+
+;<switch id="S50" name="Retard Signal from AT" desc="" byte="0x000068" bit="3"/>
+
+;<switch id="S51" name="Fuel Cut Signal from AT" desc="" byte="0x000068" bit="2"/>
+
+;<switch id="S52" name="Ban of Torque Down" desc="" byte="0x000068" bit="1"/>
+
+;<switch id="S53" name="Request Torque Down VDC" desc="" byte="0x000068" bit="0"/>
+
+;<switch id="S54" name="Torque Control Signal #1" desc="" byte="0x000069" bit="7"/>
+
+;<switch id="S55" name="Torque Control Signal #2" desc="" byte="0x000069" bit="6"/>
+
+;<switch id="S56" name="Torque Permission Signal" desc="" byte="0x000069" bit="5"/>
+
+;<switch id="S57" name="EAM Signal" desc="" byte="0x000069" bit="4"/>
+
+;<switch id="S58" name="AT coop. lock up signal" desc="" byte="0x000069" bit="3"/>
+
+;<switch id="S59" name="AT coop. lean burn signal" desc="" byte="0x000069" bit="2"/>
+
+;<switch id="S60" name="AT coop. rich spike signal" desc="" byte="0x000069" bit="1"/>
+
+;<switch id="S61" name="AET Signal" desc="" byte="0x000069" bit="0"/>
+
+;<switch id="S62" name="ETC Motor Relay" desc="" byte="0x000120" bit="6"/>
+
+;<switch id="S63" name="Clutch Switch" desc="" byte="0x000121" bit="7"/>
+
+;<switch id="S64" name="Stop Light Switch" desc="" byte="0x000121" bit="6"/>
+
+;<switch id="S65" name="Set/Coast Switch" desc="" byte="0x000121" bit="5"/>
+
+;<switch id="S66" name="Resume/Accelerate Switch" desc="" byte="0x000121" bit="4"/>
+
+;<switch id="S67" name="Brake Switch" desc="" byte="0x000121" bit="3"/>
+
+;<switch id="S68" name="Accelerator Switch" desc="" byte="0x000121" bit="1"/>
+
+
+
+
+
+
+;-------------calculated parameter---------------
+
+type = calc				; you can derive calculated parameters from other parameters
+; using RPN expressions
+
+paramname = 	LOADCALC*(g/REV)	; Engine_Load*(g/REV)   Calculated from MAF and RPM
+scalingrpn = MAF(g/s),60,*,RPM,/	; "g/rev" (MAF*60)/RPM
+			
+;paramname = IDC
+;scalingrpn = IPW,RPM,*,1200,/
+
+
+
+
+;-------------triggers---------------
+
+; note that parameters must be previously defined 
+; before defining triggers using them
+;
+; triggers allow you to control when logging starts and stops
+; this example sets up triggers such that logging only occurs
+; when the engine is running (RPM > 0)
+;
+; triggers consist of a condition (a RPN expression using comparison operators)
+; and an action. the RPN comparison operators match those in the C language:
+;
+; > < >= <= == != && ||
+;
+; if the condition evaluates to a non-zero value, that action is taken
+
+;paramname = defogger_sw
+;paramid = 0x64
+;databits = 1
+;offsetbits = 5
+;isvisible = 0
+;
+;conditionrpn = defogger_sw,1,==
+;action = start
+;
+;conditionrpn = defogger_sw,0,==
+;action = stop
+
+
+
+conditionrpn = RPM,0,>
+action = start
+
+conditionrpn = RPM,0,==
+action = stop
