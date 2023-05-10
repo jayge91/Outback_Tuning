@@ -5,10 +5,11 @@
 ; A2WC510S		2F12795206 **CURRENT**
 ; A2WC522S		2F12795606
 
-
-;----------------adc----------------
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	** ADC **
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 type = adc 						; log from built in ADC channels, paramid is pin number on OBD connector.
-							; valid pins are 8 and 16, values are pre-scaled to millivolts.
+							; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
 							; on newer subarus pin 8 is connected to the ignition voltage (not mine).
 
 paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input.
@@ -19,21 +20,28 @@ paramname = V_BATT					; Pin 16 is always supplied with battery voltage - will b
 	paramid = 16					
 	scalingrpn=x,0.001,*   				; Scale to volts.
 
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	** ASCII / SERIAL **
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+type = ascii						; the "ascii" channel type can listen on any protocol for incoming numeric text
+							; the default protocolid is 9, which corresponds to the 3/32" jack (ring) receive-only serial port
+baud = 19200						; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
 
-;----------------ascii----------------
-;type = ascii						; RS232 input.
-;baud = 19200						; Set baudrate manually (default 9600).
-							; Gets read at headphone jack RING**.
+; the ascii channel considers anything other than the characters {'0'-'9','+','-','.','E','e'} to be a 
+; delimiter between different numbers. furthermore, the carriage return and line feed characters are 
+; considered to mark the beginning of a new row of data. you can sample data from a particular column of
+; numbers by choosing a paramid starting at 1 which indicates the column number
 
-;paramname = AEM(AFR)
-	;paramid = 1					; using paramid 1 for the identifier (1 default for first reading, readings separated by delimiter char).
+; in the case of the AEM UEGO, there is simply one column of data, and it is already scaled appropriately
 
+paramname = AFR
+	paramid = 1
 
-;----------------  SSM LOGGING ----------------
-;------  parameters  ------
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	** SSM LOGGING **
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 type = ssmk						; SSM K-line logging (eventual ssmcan (CAN) might work).
 
-;---  High Priority Log Items ---
 paramname = TPS						;Throttle Opening Angle (%).
 	paramid = 0x000015
 	databits = 8
@@ -325,9 +333,9 @@ paramname = Intake_VVT_Adv_Angle_Right
 
 
 
-
-;-------------calculated parameter---------------
-
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	Calculated Parameters
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;type = calc						; you can derive calculated parameters from other parameters.
 ; using RPN expressions
 
@@ -337,10 +345,9 @@ paramname = Intake_VVT_Adv_Angle_Right
 ;paramname = IDC
 ;scalingrpn = IPW,RPM,*,1200,/
 
-
-
-
-;-------------triggers---------------
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	Triggers
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ; note that parameters must be previously defined 
 ; before defining triggers using them
