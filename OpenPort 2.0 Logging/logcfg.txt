@@ -5,6 +5,7 @@
 ; A2WC510S		2F12795206 **CURRENT**
 ; A2WC522S		2F12795606
 
+
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** ADC **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -19,6 +20,7 @@ paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input.
 paramname = V_BATT					; Pin 16 is always supplied with battery voltage - will be on toggle switch eventually.
 	paramid = 16					
 	scalingrpn=x,0.001,*   				; Scale to volts.
+
 
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** ASCII / SERIAL **
@@ -36,6 +38,7 @@ baud = 19200						; the default baud rate and setting are 9600,N,8,1. all of the
 
 paramname = AFR
 	paramid = 1
+
 
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** SSM LOGGING **
@@ -186,151 +189,81 @@ paramname = Intake_VVT_Adv_Angle_Right
 ;databits = 16
 ;scalingrpn = x
 
+
 ;------  switches  ------
-
 ;<switch id="S1" name="AT Vehicle ID" desc="" byte="0x000061" bit="6"/>
-
 ;<switch id="S2" name="Test Mode Connector" desc="" byte="0x000061" bit="5"/>
-
 ;<switch id="S3" name="Read Memory Connector" desc="" byte="0x000061" bit="4"/>
-
 ;<switch id="S4" name="Neutral Position Switch" desc="" byte="0x000062" bit="7"/>
-
 ;<switch id="S5" name="Idle Switch" desc="" byte="0x000062" bit="6"/>
-
 ;<switch id="S6" name="Intercooler AutoWash Switch" desc="" byte="0x000062" bit="4"/>
-
 ;<switch id="S7" name="Ignition Switch" desc="" byte="0x000062" bit="3"/>
-
 ;<switch id="S8" name="Power Steering Switch" desc="" byte="0x000062" bit="2"/>
-
 ;<switch id="S9" name="Air Conditioning Switch" desc="" byte="0x000062" bit="1"/>
-
 ;<switch id="S10" name="Handle Switch" desc="" byte="0x000063" bit="7"/>
-
 ;<switch id="S11" name="Starter Switch" desc="" byte="0x000063" bit="6"/>
-
 ;<switch id="S12" name="Front O2 Rich Signal" desc="" byte="0x000063" bit="5"/>
-
 ;<switch id="S13" name="Rear O2 Rich Signal" desc="" byte="0x000063" bit="4"/>
-
 ;<switch id="S14" name="Front O2 #2 Rich Signal" desc="" byte="0x000063" bit="3"/>
-
 ;<switch id="S15" name="Knock Signal 1" desc="" byte="0x000063" bit="2"/>
-
 ;<switch id="S16" name="Knock Signal 2" desc="" byte="0x000063" bit="1"/>
-
 ;<switch id="S17" name="Electrical Load Signal" desc="" byte="0x000063" bit="0"/>
-
 ;<switch id="S18" name="Crank Position Sensor" desc="" byte="0x000064" bit="7"/>
-
 ;<switch id="S19" name="Cam Position Sensor" desc="" byte="0x000064" bit="6"/>
-
 ;<switch id="S20" name="Defogger Switch" desc="" byte="0x000064" bit="5"/>.
 ;paramname = defogger_sw
 ;paramid = 0x64
 ;databits = 1
 ;offsetbits = 5
 ;isvisible = 0
-
 ;<switch id="S21" name="Blower Switch" desc="" byte="0x000064" bit="4"/>
-
 ;<switch id="S22" name="Interior Light Switch" desc="" byte="0x000064" bit="3"/>
-
 ;<switch id="S23" name="Wiper Switch" desc="" byte="0x000064" bit="2"/>
-
 ;<switch id="S24" name="Air-Con Lock Signal" desc="" byte="0x000064" bit="1"/>
-
 ;<switch id="S25" name="Air-Con Mid Pressure Switch" desc="" byte="0x000064" bit="0"/>
-
 ;<switch id="S26" name="Air-Con Compressor Signal" desc="" byte="0x000065" bit="7"/>
-
 ;<switch id="S27" name="Radiator Fan Relay #3" desc="" byte="0x000065" bit="6"/>
-
 ;<switch id="S28" name="Radiator Fan Relay #1" desc="" byte="0x000065" bit="5"/>
-
 ;<switch id="S29" name="Radiator Fan Relay #2" desc="" byte="0x000065" bit="4"/>
-
 ;<switch id="S30" name="Fuel Pump Relay" desc="" byte="0x000065" bit="3"/>
-
 ;<switch id="S31" name="Intercooler Auto-Wash Relay" desc="" byte="0x000065" bit="2"/>
-
 ;<switch id="S32" name="CPC Solenoid Valve" desc="" byte="0x000065" bit="1"/>
-
 ;<switch id="S33" name="Blow-By Leak Connector" desc="" byte="0x000065" bit="0"/>
-
 ;<switch id="S34" name="PCV Solenoid Valve" desc="" byte="0x000066" bit="7"/>
-
 ;<switch id="S35" name="TGV Output" desc="" byte="0x000066" bit="6"/>
-
 ;<switch id="S36" name="TGV Drive" desc="" byte="0x000066" bit="5"/>
-
 ;<switch id="S37" name="Variable Intake Air Solenoid" desc="" byte="0x000066" bit="4"/>
-
 ;<switch id="S38" name="Pressure Sources Change" desc="" byte="0x000066" bit="3"/>
-
 ;<switch id="S39" name="Vent Solenoid Valve" desc="" byte="0x000066" bit="2"/>
-
 ;<switch id="S40" name="P/S Solenoid Valve" desc="" byte="0x000066" bit="1"/>
-
 ;<switch id="S41" name="Assist Air Solenoid Valve" desc="" byte="0x000066" bit="0"/>
-
 ;<switch id="S42" name="Tank Sensor Control Valve" desc="" byte="0x000067" bit="7"/>
-
 ;<switch id="S43" name="Relief Valve Solenoid 1" desc="" byte="0x000067" bit="6"/>
-
 ;<switch id="S44" name="Relief Valve Solenoid 2" desc="" byte="0x000067" bit="5"/>
-
 ;<switch id="S45" name="TCS Relief Valve Solenoid" desc="" byte="0x000067" bit="4"/>
-
 ;<switch id="S46" name="Ex. Gas Positive Pressure" desc="" byte="0x000067" bit="3"/>
-
 ;<switch id="S47" name="Ex. Gas Negative Pressure" desc="" byte="0x000067" bit="2"/>
-
 ;<switch id="S48" name="Intake Air Solenoid" desc="" byte="0x000067" bit="1"/>
-
 ;<switch id="S49" name="Muffler Control" desc="" byte="0x000067" bit="0"/>
-
 ;<switch id="S50" name="Retard Signal from AT" desc="" byte="0x000068" bit="3"/>
-
 ;<switch id="S51" name="Fuel Cut Signal from AT" desc="" byte="0x000068" bit="2"/>
-
 ;<switch id="S52" name="Ban of Torque Down" desc="" byte="0x000068" bit="1"/>
-
 ;<switch id="S53" name="Request Torque Down VDC" desc="" byte="0x000068" bit="0"/>
-
 ;<switch id="S54" name="Torque Control Signal #1" desc="" byte="0x000069" bit="7"/>
-
 ;<switch id="S55" name="Torque Control Signal #2" desc="" byte="0x000069" bit="6"/>
-
 ;<switch id="S56" name="Torque Permission Signal" desc="" byte="0x000069" bit="5"/>
-
 ;<switch id="S57" name="EAM Signal" desc="" byte="0x000069" bit="4"/>
-
 ;<switch id="S58" name="AT coop. lock up signal" desc="" byte="0x000069" bit="3"/>
-
 ;<switch id="S59" name="AT coop. lean burn signal" desc="" byte="0x000069" bit="2"/>
-
 ;<switch id="S60" name="AT coop. rich spike signal" desc="" byte="0x000069" bit="1"/>
-
 ;<switch id="S61" name="AET Signal" desc="" byte="0x000069" bit="0"/>
-
 ;<switch id="S62" name="ETC Motor Relay" desc="" byte="0x000120" bit="6"/>
-
 ;<switch id="S63" name="Clutch Switch" desc="" byte="0x000121" bit="7"/>
-
 ;<switch id="S64" name="Stop Light Switch" desc="" byte="0x000121" bit="6"/>
-
 ;<switch id="S65" name="Set/Coast Switch" desc="" byte="0x000121" bit="5"/>
-
 ;<switch id="S66" name="Resume/Accelerate Switch" desc="" byte="0x000121" bit="4"/>
-
 ;<switch id="S67" name="Brake Switch" desc="" byte="0x000121" bit="3"/>
-
 ;<switch id="S68" name="Accelerator Switch" desc="" byte="0x000121" bit="1"/>
-
-
-
 
 
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -345,10 +278,10 @@ paramname = Intake_VVT_Adv_Angle_Right
 ;paramname = IDC
 ;scalingrpn = IPW,RPM,*,1200,/
 
+
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	Triggers
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 ; note that parameters must be previously defined 
 ; before defining triggers using them
 ;
@@ -362,6 +295,17 @@ paramname = Intake_VVT_Adv_Angle_Right
 ; > < >= <= == != && ||
 ;
 ; if the condition evaluates to a non-zero value, that action is taken
+;
+; at present the following actions are available:
+;
+; start - starts logging to a file (if not already doing so)
+; stop - stops logging to a file
+; newfile - starts a new file (only if already logging to a file)
+;
+; IMPORTANT - if you have no triggers defined, logging will start automatically.
+; if you have *any* triggers defined, logging will not start until a start action
+; occurs
+
 
 ;paramname = defogger_sw
 ;paramid = 0x64
@@ -374,7 +318,6 @@ paramname = Intake_VVT_Adv_Angle_Right
 ;
 ;conditionrpn = defogger_sw,0,==
 ;action = stop
-
 
 
 conditionrpn = RPM,0,>
