@@ -13,15 +13,11 @@ type = adc 						; log from built in ADC channels
 							; values are pre-scaled to millivolts
 							; on newer subarus pin 8 is connected to the ignition voltage (not mine)
 
-;paramname = V_PIN8					; Eventually will be logging toggle switch input
-	;paramid = 8					; pin 8
-	;scalingrpn = x,0.001,* 			; here we scale to volts
-		
-paramname = AEM_WB(AFR)					; Setup as WB ADC Input
+paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input
 	paramid = 8
 	scalingrpn = x,0.0023748461,*,7.31257695,+
 
-paramname = V_BATT					; Pin 16 is always supplied with battery voltage
+paramname = V_BATT					; Pin 16 is always supplied with battery voltage - will be on toggle switch
 	paramid = 16					; pin 16
 	scalingrpn=x,0.001,*   				; here we scale to volts
 
@@ -29,8 +25,7 @@ paramname = V_BATT					; Pin 16 is always supplied with battery voltage
 ;----------------ascii----------------
 ;type = ascii						; UART input
 ;baud = 19200						; Set baudrate
-							; Read at headphone jack TIP
-							; Pending testing - possiblY also OEM12
+							; Read at headphone jack RING**
 
 ;paramname = AEM(AFR)
 	;paramid = 1					; using paramid 1 for the identifier (1 default for first innovate device)
