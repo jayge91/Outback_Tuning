@@ -9,15 +9,14 @@
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** ADC **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = adc 						; log from built in ADC channels, paramid is pin number on OBD connector.
-							; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
-							; on newer subarus pin 8 is connected to the ignition voltage (not mine).
+type = adc 								; log from built in ADC channels, paramid is pin number on OBD connector.
+										; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
 
 paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input.
 	paramid = 8
 	scalingrpn = x,0.0023748461,*,7.31257695,+
 
-paramname = V_BATT					; Pin 16 is always supplied with battery voltage - will be on toggle switch eventually.
+paramname = V_BATT						; Pin 16 is always supplied with battery voltage - will be on toggle switch eventually.
 	paramid = 16					
 	scalingrpn=x,0.001,*   				; Scale to volts.
 
@@ -25,16 +24,15 @@ paramname = V_BATT					; Pin 16 is always supplied with battery voltage - will b
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** ASCII / SERIAL **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = ascii						; the "ascii" channel type can listen on any protocol for incoming numeric text
-;baud = 9600						; the default protocolid is 9, which corresponds to the 3/32" jack (ring) receive-only serial port
-							; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
+type = ascii							; the "ascii" channel type can listen on any protocol for incoming numeric text
+;baud = 9600							; the default protocolid is 9, which corresponds to the 3/32" jack (ring) receive-only serial port
+										; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
 
-; the ascii channel considers anything other than the characters {'0'-'9','+','-','.','E','e'} to be a 
-; delimiter between different numbers. furthermore, the carriage return and line feed characters are 
-; considered to mark the beginning of a new row of data. you can sample data from a particular column of
-; numbers by choosing a paramid starting at 1 which indicates the column number
-
-; in the case of the AEM UEGO, there is simply one column of data, and it is already scaled appropriately
+	; the ascii channel considers anything other than the characters {'0'-'9','+','-','.','E','e'} to be a 
+	; delimiter between different numbers. furthermore, the carriage return and line feed characters are 
+	; considered to mark the beginning of a new row of data. you can sample data from a particular column of
+	; numbers by choosing a paramid starting at 1 which indicates the column number.
+	; In the case of the AEM UEGO, there is simply one column of data, and it is already scaled appropriately
 
 paramname = AFR
 	paramid = 1
@@ -43,7 +41,7 @@ paramname = AFR
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** SSM LOGGING **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = ssmk						; SSM K-line logging (eventually, ssmcan (CAN) might work with ECU patch).
+type = ssmk								; SSM K-line logging (eventually, ssmcan (CAN) might work with ECU patch).
 ;baud = 
 
 ; --sampgroup 1--	bits: 96
@@ -151,7 +149,7 @@ paramname = CL/OL_Fueling(status)
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	Calculated Parameters
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-;type = calc						; you can derive calculated parameters from other parameters using RPN expressions.
+;type = calc							; you can derive calculated parameters from other parameters using RPN expressions.
 
 ;paramname = 	LOADCALC*(g/REV)		; Engine_Load*(g/REV)   Calculated from MAF and RPM.
 ;	scalingrpn = MAF(g/s),60,*,RPM,/
@@ -163,49 +161,49 @@ paramname = CL/OL_Fueling(status)
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	Triggers
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-; note that parameters must be previously defined 
-; before defining triggers using them
-;
-; triggers allow you to control when logging starts and stops
-; this example sets up triggers such that logging only occurs
-; when the engine is running (RPM > 0)
-;
-; triggers consist of a condition (a RPN expression using comparison operators)
-; and an action. the RPN comparison operators match those in the C language:
-;
-; > < >= <= == != && ||
-;
-; if the condition evaluates to a non-zero value, that action is taken
-;
-; at present the following actions are available:
-;
-; start - starts logging to a file (if not already doing so)
-; stop - stops logging to a file
-; newfile - starts a new file (only if already logging to a file)
-;
-; IMPORTANT - if you have no triggers defined, logging will start automatically.
-; if you have *any* triggers defined, logging will not start until a start action
-; occurs
+	; note that parameters must be previously defined 
+	; before defining triggers using them
+	;
+	; triggers allow you to control when logging starts and stops
+	; this example sets up triggers such that logging only occurs
+	; when the engine is running (RPM > 0)
+	;
+	; triggers consist of a condition (a RPN expression using comparison operators)
+	; and an action. the RPN comparison operators match those in the C language:
+	;
+	; > < >= <= == != && ||
+	;
+	; if the condition evaluates to a non-zero value, that action is taken
+	;
+	; at present the following actions are available:
+	;
+	; start - starts logging to a file (if not already doing so)
+	; stop - stops logging to a file
+	; newfile - starts a new file (only if already logging to a file)
+	;
+	; IMPORTANT - if you have no triggers defined, logging will start automatically.
+	; if you have *any* triggers defined, logging will not start until a start action
+	; occurs
 
 
 ;paramname = defogger_sw
-;paramid = 0x64
-;databits = 1
-;offsetbits = 5
-;isvisible = 0
-;
+;	paramid = 0x64
+;	databits = 1
+;	offsetbits = 5
+;	isvisible = 0
+
 ;conditionrpn = defogger_sw,1,==
-;action = start
-;
+;	action = start
+
 ;conditionrpn = defogger_sw,0,==
-;action = stop
+;	action = stop
 
 
-conditionrpn = RPM,0,>
-	action = start
+;conditionrpn = RPM,0,>
+;	action = start
 
-conditionrpn = RPM,0,==
-	action = stop
+;conditionrpn = RPM,0,==
+;	action = stop
 
 
 
@@ -225,7 +223,7 @@ conditionrpn = RPM,0,==
 ;	databits = 16
 ;	scalingrpn = x,0.25,*
 ;
-;paramname = LOAD(g/rev)					; 4-Byte Load (ECU Calculated).
+;paramname = LOAD(g/rev)				; 4-Byte Load (ECU Calculated).
 ;	paramid = 0xFF50B0
 ;	isfloat = 1
 ;paramname = MAF(g/s)					; Mass_Airflow*(g/s) (.
@@ -247,7 +245,7 @@ conditionrpn = RPM,0,==
 ;	paramid = 0x000024
 ;	databits = 8
 ;	;scalingrpn = x,128,-,37,*,255,/,0.0689475729,* ; (BAR).
-;	scalingrpn = x,128,-,0.1450983015278421,* 	; (PSI).
+;	scalingrpn = x,128,-,0.1450983015278421,* 		; (PSI).
 ;
 ;
 ;
@@ -256,21 +254,21 @@ conditionrpn = RPM,0,==
 ;	databits = 8
 ;	sampgroup = 15
 ;	;scalingrpn = x,40,- 				; (DegC).
-;	scalingrpn = x,9,*,200,-,0.2,* 			; (Deg F).
+;	scalingrpn = x,9,*,200,-,0.2,* 		; (Deg F).
 ;
 ;paramname = VSS(MPH)
 ;	paramid = 0x000010
 ;	databits = 8
 ;	sampgroup = 15
-;	;scalingrpn = x					; (km/h).
-;	scalingrpn = x;0.621371192,*			; (mph).
+;	;scalingrpn = x						; (km/h).
+;	scalingrpn = x;0.621371192,*		; (mph).
 ;
 ;paramname = IAT(*F)					;(Pre-Turbo, in airbox).
 ;	paramid = 0x000012
 ;	databits = 8
 ;	sampgroup = 
 ;	;scalingrpn = x,40,- 				;(*C).
-;	scalingrpn = x,9,*,200,-,0.2,* 			;(*F).
+;	scalingrpn = x,9,*,200,-,0.2,* 		;(*F).
 ;
 ;paramname = Fine_Learning_Knock_Correction*
 ;	paramid = 0x20C65
