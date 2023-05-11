@@ -26,8 +26,8 @@ paramname = V_BATT					; Pin 16 is always supplied with battery voltage - will b
 ;	** ASCII / SERIAL **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 type = ascii						; the "ascii" channel type can listen on any protocol for incoming numeric text
-							; the default protocolid is 9, which corresponds to the 3/32" jack (ring) receive-only serial port
-baud = 19200						; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
+;baud = 9600						; the default protocolid is 9, which corresponds to the 3/32" jack (ring) receive-only serial port
+							; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
 
 ; the ascii channel considers anything other than the characters {'0'-'9','+','-','.','E','e'} to be a 
 ; delimiter between different numbers. furthermore, the carriage return and line feed characters are 
@@ -43,42 +43,259 @@ paramname = AFR
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** SSM LOGGING **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = ssmk						; SSM K-line logging (eventual ssmcan (CAN) might work).
+type = ssmk						; SSM K-line logging (eventually, ssmcan (CAN) might work with ECU patch).
+;baud = 
 
-paramname = TPS						;Throttle Opening Angle (%).
+; --sampgroup 1--	bits: 96
+paramname = TPS(%)	
 	paramid = 0x000015
 	databits = 8
+	sampgroup = 1
 	scalingrpn = x,0.392156862745098,*
-
-paramname = RPM						; Engine_Speed(RPM).
+	
+paramname = RPM	
 	paramid = 0x00000E
 	databits = 16
+	sampgroup = 1
 	scalingrpn = x,0.25,*
-
-paramname = LOAD(g/rev)					; 4-Byte Load (Float Value).
-	paramid = 0xFF50B0   
-	isfloat = 1
-
-paramname = MAF(g/s)					; Mass_Airflow*(g/s).
-	paramid = 0x000013
-	databits = 16
-	scalingrpn = x,.01,*
-
-paramname = Mass_Airflow_Sensor(V)
-	paramid = 0x00001D
-	databits = 8
-	scalingrpn = x,0.02,*
-
-paramname = Ignition_Total_Timing*
+	
+paramname = Ignition_Total_Timing(*)	
 	paramid = 0x000011
 	databits = 8
+	sampgroup = 1
 	scalingrpn = x,128,-,0.5,*
-
-paramname = MAP						; (Relative).
+	
+paramname = LOAD(g/rev)	
+	paramid = 0xFF530C
+	databits = 16
+	sampgroup = 1
+	scalingrpn = x,0.00006103516,*
+	
+paramname = MAF(g/s)	
+	paramid = 0x000013
+	databits = 16
+	sampgroup = 1
+	scalingrpn = x,.01,*
+	
+paramname = Mass_Airflow_Sensor(V)	
+	paramid = 0x00001D
+	databits = 8
+	sampgroup = 1
+	scalingrpn = x,0.02,*
+	
+paramname = MAP	
 	paramid = 0x000024
 	databits = 8
-	;scalingrpn = x,128,-,37,*,255,/,0.0689475729,* ; (BAR).
-	scalingrpn = x,128,-,0.1450983015278421,* 	; (PSI).
+	sampgroup = 1
+	;scalingrpn = x,128,-,37,*,255,/,0.0689475729,*
+	scalingrpn = x,128,-,0.1450983015278421,* 
+	
+paramname = Fine_Learning_Knock_Correction(*)	
+	paramid = 0x20C65
+	databits = 8
+	sampgroup = 1
+	scalingrpn = x,.3515625,*,45,-
+	
+paramname = (idk)Fine_Learning_Knock_Correction(*)	
+	paramid = 0xFF5337
+	databits = 8
+	sampgroup = 1
+	scalingrpn = x,0.3515625,*,45,-
+
+
+; --sampgroup 2--	bits: 72
+paramname = A/F_Sensor_#1(AFR) 	
+	paramid = 0xFF5322
+	databits =16
+	sampgroup = 2
+	scalingrpn = x,0.00179443341,*
+	scalingrpn = x,0.001794433,*
+
+paramname = Final_Fueling_Base(AFR)	
+	paramid = 0xFF530A
+	databits = 16
+	sampgroup = 2
+	scalingrpn = 14.7,x,0004882812,*,/
+	
+paramname = A/F_Correction_#1(%)	
+	paramid = 0xFF5300
+	databits = 16
+	sampgroup = 2
+	scalingrpn = x,0.01220703,*,100,-
+	
+paramname =  A/F_Learing_#1(%)	
+	paramid = 0xFF5304
+	databits = 16
+	sampgroup = 2
+	scalingrpn = x,0.04882812,*,50,-
+	
+paramname = A/F_Correction_#3(%)	
+	paramid = 0x0000D0
+	databits = 8
+	sampgroup = 2
+	scalingrpn = x,0.078125,*,5,
+	
+paramname = A/F_Learning_Airflow_Range(ABCD)	
+	paramid = 0xFF5799
+	databits = 8
+	sampgroup = 2
+	scalingrpn = x,1,+
+	
+paramname = CL/OL_Fueling(status)	
+	paramid = 0xFF6F91
+	databits = 8
+	sampgroup = 2
+	scalingrpn = x,6,+
+
+
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	Calculated Parameters
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;type = calc						; you can derive calculated parameters from other parameters using RPN expressions.
+
+;paramname = 	LOADCALC*(g/REV)		; Engine_Load*(g/REV)   Calculated from MAF and RPM.
+;	scalingrpn = MAF(g/s),60,*,RPM,/
+			
+;paramname = IDC
+;	scalingrpn = IPW,RPM,*,0.000833333333333333,*
+
+
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	Triggers
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+; note that parameters must be previously defined 
+; before defining triggers using them
+;
+; triggers allow you to control when logging starts and stops
+; this example sets up triggers such that logging only occurs
+; when the engine is running (RPM > 0)
+;
+; triggers consist of a condition (a RPN expression using comparison operators)
+; and an action. the RPN comparison operators match those in the C language:
+;
+; > < >= <= == != && ||
+;
+; if the condition evaluates to a non-zero value, that action is taken
+;
+; at present the following actions are available:
+;
+; start - starts logging to a file (if not already doing so)
+; stop - stops logging to a file
+; newfile - starts a new file (only if already logging to a file)
+;
+; IMPORTANT - if you have no triggers defined, logging will start automatically.
+; if you have *any* triggers defined, logging will not start until a start action
+; occurs
+
+
+;paramname = defogger_sw
+;paramid = 0x64
+;databits = 1
+;offsetbits = 5
+;isvisible = 0
+;
+;conditionrpn = defogger_sw,1,==
+;action = start
+;
+;conditionrpn = defogger_sw,0,==
+;action = stop
+
+
+conditionrpn = RPM,0,>
+	action = start
+
+conditionrpn = RPM,0,==
+	action = stop
+
+
+
+
+
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	Untested Section
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+;paramname = TPS						;Throttle Opening Angle (%).
+;	paramid = 0x000015
+;	databits = 8
+;	scalingrpn = x,0.392156862745098,*
+;
+;paramname = RPM						; Engine_Speed(RPM).
+;	paramid = 0x00000E
+;	databits = 16
+;	scalingrpn = x,0.25,*
+;
+;paramname = LOAD(g/rev)					; 4-Byte Load (ECU Calculated).
+;	paramid = 0xFF50B0
+;	isfloat = 1
+;paramname = MAF(g/s)					; Mass_Airflow*(g/s) (.
+;	paramid = 0x000013
+;	databits = 16
+;	scalingrpn = x,.01,*
+;
+;paramname = Mass_Airflow_Sensor(V)
+;	paramid = 0x00001D
+;	databits = 8
+;	scalingrpn = x,0.02,*
+;
+;paramname = Ignition_Total_Timing*
+;	paramid = 0x000011
+;	databits = 8
+;	scalingrpn = x,128,-,0.5,*
+;
+;paramname = MAP						; (Relative).
+;	paramid = 0x000024
+;	databits = 8
+;	;scalingrpn = x,128,-,37,*,255,/,0.0689475729,* ; (BAR).
+;	scalingrpn = x,128,-,0.1450983015278421,* 	; (PSI).
+;
+;
+;
+;paramname = Coolant_Temp(*F)
+;	paramid = 0x000008
+;	databits = 8
+;	sampgroup = 15
+;	;scalingrpn = x,40,- 				; (DegC).
+;	scalingrpn = x,9,*,200,-,0.2,* 			; (Deg F).
+;
+;paramname = VSS(MPH)
+;	paramid = 0x000010
+;	databits = 8
+;	sampgroup = 15
+;	;scalingrpn = x					; (km/h).
+;	scalingrpn = x;0.621371192,*			; (mph).
+;
+;paramname = IAT(*F)					;(Pre-Turbo, in airbox).
+;	paramid = 0x000012
+;	databits = 8
+;	sampgroup = 
+;	;scalingrpn = x,40,- 				;(*C).
+;	scalingrpn = x,9,*,200,-,0.2,* 			;(*F).
+;
+;paramname = Fine_Learning_Knock_Correction*
+;	paramid = 0x20C65
+;	databits = 8
+;	sampgroup = 2
+;	scalingrpn = x,.3515625,*,45,-
+;
+;paramname = IAM*
+;	paramid = 0x20120
+;	databits = 8
+;	sampgroup = 2
+;	scalingrpn = x
+;
+;paramname = Intake_VVT_Adv_Angle_Left
+;	paramid = 0x00003D
+;	databits = 8
+;	sampgroup = 2
+;	scalingrpn = x,50,-
+;
+;paramname = Intake_VVT_Adv_Angle_Right
+;	paramid = 0x00003C
+;	databits = 8
+;	sampgroup = 2
+;	scalingrpn = x,50,-
+
 
 
 ;<ecuparam id="E39" name="Feedback Knock Correction (4-byte)*" desc="E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock." target="1">
@@ -115,60 +332,6 @@ paramname = MAP						; (Relative).
 ;<conversion units="absolute %" storagetype="float" expr="x" format="0.00" />
 
 
-
-
-
-;---  lower priority log items ---
-; --  sampgroup 1  –
-paramname = Coolant_Temp(*F)
-	paramid = 0x000008
-	databits = 8
-	sampgroup = 1
-	;scalingrpn = x,40,- 				; (DegC).
-	scalingrpn = x,9,*,200,-,0.2,* 			; (Deg F).
-
-paramname = VSS(MPH)
-	paramid = 0x000010
-	databits = 8
-	sampgroup = 1
-	;scalingrpn = x					; (km/h).
-	scalingrpn = x;0.621371192,*			; (mph).
-
-paramname = IAT(*F)					;(Pre-Turbo, in airbox).
-	paramid = 0x000012
-	databits = 8
-	sampgroup = 1
-	;scalingrpn = x,40,- 				;(*C).
-	scalingrpn = x,9,*,200,-,0.2,* 			;(*F).
-
-
-; --  sampgroup 2  –-
-paramname = Fine_Learning_Knock_Correction*
-	paramid = 0x20C65
-	databits = 8
-	sampgroup = 2
-	scalingrpn = x,.3515625,*,45,-
-
-paramname = IAM*
-	paramid = 0x20120
-	databits = 8
-	sampgroup = 2
-	scalingrpn = x
-
-paramname = Intake_VVT_Adv_Angle_Left
-	paramid = 0x00003D
-	databits = 8
-	sampgroup = 2
-	scalingrpn = x,50,-
-
-paramname = Intake_VVT_Adv_Angle_Right
-	paramid = 0x00003C
-	databits = 8
-	sampgroup = 2
-	scalingrpn = x,50,-
-
-
-;------------  untested section  ------------
 
 ;<ecuparam id="E33" name="CL/OL Fueling*" desc="Fuel system status. [8 = Closed Loop (normal)] [10 = Open Loop (normal)] [7 = Open Loop due insufficient coolant temp] [14 = Open Loop due to system failure].">
 ;<conversion units="status" expr="x+6" format="0"/>
@@ -266,62 +429,3 @@ paramname = Intake_VVT_Adv_Angle_Right
 ;<switch id="S68" name="Accelerator Switch" desc="" byte="0x000121" bit="1"/>
 
 
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-;	Calculated Parameters
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-;type = calc						; you can derive calculated parameters from other parameters.
-; using RPN expressions
-
-;	paramname = 	LOADCALC*(g/REV)		; Engine_Load*(g/REV)   Calculated from MAF and RPM.
-;		scalingrpn = MAF(g/s),60,*,RPM,/
-			
-;paramname = IDC
-;scalingrpn = IPW,RPM,*,1200,/
-
-
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-;	Triggers
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-; note that parameters must be previously defined 
-; before defining triggers using them
-;
-; triggers allow you to control when logging starts and stops
-; this example sets up triggers such that logging only occurs
-; when the engine is running (RPM > 0)
-;
-; triggers consist of a condition (a RPN expression using comparison operators)
-; and an action. the RPN comparison operators match those in the C language:
-;
-; > < >= <= == != && ||
-;
-; if the condition evaluates to a non-zero value, that action is taken
-;
-; at present the following actions are available:
-;
-; start - starts logging to a file (if not already doing so)
-; stop - stops logging to a file
-; newfile - starts a new file (only if already logging to a file)
-;
-; IMPORTANT - if you have no triggers defined, logging will start automatically.
-; if you have *any* triggers defined, logging will not start until a start action
-; occurs
-
-
-;paramname = defogger_sw
-;paramid = 0x64
-;databits = 1
-;offsetbits = 5
-;isvisible = 0
-;
-;conditionrpn = defogger_sw,1,==
-;action = start
-;
-;conditionrpn = defogger_sw,0,==
-;action = stop
-
-
-conditionrpn = RPM,0,>
-	action = start
-
-conditionrpn = RPM,0,==
-	action = stop
