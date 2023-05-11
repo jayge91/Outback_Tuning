@@ -42,7 +42,7 @@ paramname = AFR
 ;	** SSM LOGGING **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 type = ssmk								; SSM K-line logging (eventually, ssmcan (CAN) might work with ECU patch).
-;baud = 
+;baud = 10400
 
 ; --sampgroup 1--	bits: 96
 paramname = TPS(%)	
