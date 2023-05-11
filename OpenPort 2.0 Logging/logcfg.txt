@@ -6,20 +6,6 @@
 ; A2WC522S		2F12795606
 
 
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-;	** ADC **
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = adc 								; log from built in ADC channels, paramid is pin number on OBD connector.
-										; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
-
-paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input.
-	paramid = 8
-	scalingrpn = x,0.0023748461,*,7.31257695,+
-
-paramname = V_BATT						; Pin 16 is always supplied with battery voltage - will be on toggle switch eventually.
-	paramid = 16					
-	scalingrpn=x,0.001,*   				; Scale to volts.
-
 
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** ASCII / SERIAL **
@@ -36,6 +22,21 @@ type = ascii							; the "ascii" channel type can listen on any protocol for inc
 
 paramname = AFR
 	paramid = 1
+
+
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+;	** ADC **
+;---------------------------------------------------------------------------------------------------------------------------------------------------------------
+type = adc 								; log from built in ADC channels, paramid is pin number on OBD connector.
+										; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
+
+paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input.
+	paramid = 8
+	scalingrpn = x,0.0023748461,*,7.31257695,+
+
+paramname = V_BATT						; Pin 16 is always supplied with battery voltage - will be on toggle switch eventually.
+	paramid = 16					
+	scalingrpn=x,0.001,*   				; Scale to volts.
 
 
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
