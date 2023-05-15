@@ -1,25 +1,48 @@
 # Outback_Tuning
-
-
 This is my repository for the tuning of my 2005 Outback XT Manual. First time using GitHub so wish me luck!
 
+# Notes on logcfg.txt:
+# Definitions from RomRaider translate pretty easily to logging parameters once converted to a format the OP2.0 can read.
+paramname = xx
+paramid = 0xXXXX
+databits = 8 (reference addr length from definition)
+scalingrpn = x,xxx,*
+
+# OBD Pins can be read via ADC: 
+type=adc
+paramid = (pin number; pins 8, 12[also linked to 2.5mm Tip], and 16 so far I think can be read)
+scalingrpn = x,0.01,* (pre-scaled to mV)
+
+# OBD pins can be set manually to ground or a voltage (Not sure on how this is implemented or where yet):
+; you can also set an OBD pin to a voltage, ground, or a high impedance state
+; the first number is the OBD pin number, the second number is the pin voltage with the following values:
+;
+; 8000-18000 : voltage in millivolts for OP2 Rev C and earlier
+; 5000-25000 : voltage in millivolts for OP2 Rev D and later
+; -1         : set pin to high impedance (default state)
+; -2         : pull pin to ground
+;
+; keep in mind that if you are applying a non-zero voltage to more than one pin, all of those voltages
+; must be the same
+
+; the following setpinvoltage sets OBD pin 1 to ground, which is needed to enable logging on older Mitsubishis
+; it is commented out as it is not needed for newer models (e.g. EVO 8/9)
+;
+; setpinvoltage=1,-2
+
+# OP2.0 can read serial on the 2.5mm jack (ring):
+(about to test the AEM, had zero luck with the Innovate one, but could be due to the signal orientation. Innovate was normal-high with active-low +5v, AEM is normal-low, with active high +12v.)
+type=ascii
+baud=9600 (optional as 9600 is default)
+paramname = AFR
+paramid = 1
 
 
 
-
-
-
-Notes:
-
-
-
-
-**************************************************************
-Switches are read in the same way a parameter is read except that it will
-return up to
-8 individual ON/OFF flags in the individual bits of the return byte
-
-Switches **************************************************************
+# **************************************************************
+# Switches are read in the same way a parameter is read except that it will return up to
+# 8 individual ON/OFF flags in the individual bits of the return byte. 
+# **************************************************************
 
 Switch P0x061
 7 -----------------------
