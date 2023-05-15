@@ -12,7 +12,7 @@
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 type = ascii							; the "ascii" channel type can listen on any protocol for incoming numeric text
 ;baud = 9600							; the default protocolid is 9, which corresponds to the 3/32" jack (ring) receive-only serial port
-										; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
+								; the default baud rate and setting are 9600,N,8,1. all of these can be changed for other scenarios
 
 	; the ascii channel considers anything other than the characters {'0'-'9','+','-','.','E','e'} to be a 
 	; delimiter between different numbers. furthermore, the carriage return and line feed characters are 
@@ -27,22 +27,22 @@ paramname = AFR
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** ADC **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = adc 								; log from built in ADC channels, paramid is pin number on OBD connector.
-										; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
+type = adc 							; log from built in ADC channels, paramid is pin number on OBD connector.
+								; valid pins are 8, 12 and 16, values are pre-scaled to millivolts. (12 may have an output on flashing!)
 
-paramname = AEM_WB(AFR)					; Setup pin 8 as WB ADC Input.
+paramname = AEM_WB(AFR)						; Setup pin 8 as WB ADC Input.
 	paramid = 8
 	scalingrpn = x,0.0023748461,*,7.31257695,+
 
 paramname = V_BATT						; Pin 16 is always supplied with battery voltage - will be on toggle switch eventually.
 	paramid = 16					
-	scalingrpn=x,0.001,*   				; Scale to volts.
+	scalingrpn=x,0.001,*   					; Scale to volts.
 
 
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;	** SSM LOGGING **
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
-type = ssmk								; SSM K-line logging (eventually, ssmcan (CAN) might work with ECU patch).
+type = ssmk							; SSM K-line logging (eventually, ssmcan (CAN) might work with ECU patch).
 ;baud = 10400
 
 ; --sampgroup 1--	bits: 96
@@ -152,7 +152,7 @@ paramname = CL/OL_Fueling(status)
 ;---------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;type = calc							; you can derive calculated parameters from other parameters using RPN expressions.
 
-;paramname = 	LOADCALC*(g/REV)		; Engine_Load*(g/REV)   Calculated from MAF and RPM.
+;paramname = 	LOADCALC*(g/REV)				; Engine_Load*(g/REV)   Calculated from MAF and RPM.
 ;	scalingrpn = MAF(g/s),60,*,RPM,/
 			
 ;paramname = IDC
@@ -224,10 +224,10 @@ paramname = CL/OL_Fueling(status)
 ;	databits = 16
 ;	scalingrpn = x,0.25,*
 ;
-;paramname = LOAD(g/rev)				; 4-Byte Load (ECU Calculated).
+;paramname = LOAD(g/rev)					; 4-Byte Load (ECU Calculated).
 ;	paramid = 0xFF50B0
 ;	isfloat = 1
-;paramname = MAF(g/s)					; Mass_Airflow*(g/s) (.
+;paramname = MAF(g/s)						; Mass_Airflow*(g/s) (.
 ;	paramid = 0x000013
 ;	databits = 16
 ;	scalingrpn = x,.01,*
@@ -254,22 +254,22 @@ paramname = CL/OL_Fueling(status)
 ;	paramid = 0x000008
 ;	databits = 8
 ;	sampgroup = 15
-;	;scalingrpn = x,40,- 				; (DegC).
-;	scalingrpn = x,9,*,200,-,0.2,* 		; (Deg F).
+;	;scalingrpn = x,40,- 					; (DegC).
+;	scalingrpn = x,9,*,200,-,0.2,* 				; (Deg F).
 ;
 ;paramname = VSS(MPH)
 ;	paramid = 0x000010
 ;	databits = 8
 ;	sampgroup = 15
 ;	;scalingrpn = x						; (km/h).
-;	scalingrpn = x;0.621371192,*		; (mph).
+;	scalingrpn = x;0.621371192,*				; (mph).
 ;
-;paramname = IAT(*F)					;(Pre-Turbo, in airbox).
+;paramname = IAT(*F)						;(Pre-Turbo, in airbox).
 ;	paramid = 0x000012
 ;	databits = 8
 ;	sampgroup = 
-;	;scalingrpn = x,40,- 				;(*C).
-;	scalingrpn = x,9,*,200,-,0.2,* 		;(*F).
+;	;scalingrpn = x,40,- 					;(*C).
+;	scalingrpn = x,9,*,200,-,0.2,* 				;(*F).
 ;
 ;paramname = Fine_Learning_Knock_Correction*
 ;	paramid = 0x20C65
