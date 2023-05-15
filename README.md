@@ -1,14 +1,13 @@
 # Outback_Tuning
-## This is my repository for the tuning of my 2005 Outback XT Manual. First time using GitHub so wish me luck!
+### This is my repository for the tuning of my 2005 Outback XT Manual. First time using GitHub so wish me luck!
 
 ## To do:
 - [x] Get logcfg.txt working at a basic level and able to capture ssmk data.
-- [ ] [Get AEM Serial Logging working](https://github.com/jayge91/Outback_Tuning/issues/5)
-- [ ]
-- [ ]
+- [ ] [Get AEM Serial Logging worki.ng](https://github.com/jayge91/Outback_Tuning/issues/5)
+- [ ] [Test OpenPort 2.0 Grounds and how they are connected.](https://github.com/jayge91/Outback_Tuning/issues/4)
 
 
-# Notes on logcfg.txt:
+## Notes on logcfg.txt:
 - Definitions from RomRaider translate pretty easily to logging parameters once converted to a format the OP2.0 can read.
 
 - OBD Pins 8, 12, and 16 can be read via ADC.
