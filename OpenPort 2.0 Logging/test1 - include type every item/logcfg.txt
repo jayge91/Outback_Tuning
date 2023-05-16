@@ -10,7 +10,7 @@ paramname = P16V
 
 
 
-paramname=AFRac
+paramname=AFR
 	type=ascii
 	paramid=1
 
