@@ -1,0 +1,33 @@
+paramname=P8V	
+	type=adc
+	paramid=8
+	scalingrpn=x,0.001,*
+
+paramname = P16V
+	type=adc
+	paramid=16					
+	scalingrpn=x,0.001,*
+
+
+
+paramname=AFRac
+	type=ascii
+	paramid=1
+
+
+
+paramname=TPS(%)
+	type=ssmk
+	paramid=0x000015
+	databits=8
+	sampgroup=1
+	scalingrpn=x,0.392156862745098,*
+	
+
+paramname = IAT(*F)	
+	type=ssmk
+	paramid = 0x000012
+	databits = 8
+	sampgroup = 4
+	;scalingrpn = x,40,- 
+	scalingrpn = x,9,*,200,-,0.2,* 
