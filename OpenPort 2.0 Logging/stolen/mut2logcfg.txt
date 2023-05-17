@@ -1,0 +1,61 @@
+; sample logging configuration file for openport 2.0
+; must be named logcfg.txt and be placed in the root directory of the
+; microSD card inserted in the openport in order to work
+
+; this sample logs using the MUT-II protocol over the K-line, which works
+; for many mitsubishis, including the EVO 8 and 9
+
+;----------------mut2----------------
+type=mut2
+
+; you can also set an OBD pin to a voltage, ground, or a high impedance state
+; the first number is the OBD pin number, the second number is the pin voltage with the following values:
+;
+; 8000-18000 : voltage in millivolts for OP2 Rev C and earlier
+; 5000-25000 : voltage in millivolts for OP2 Rev D and later
+; -1         : set pin to high impedance (default state)
+; -2         : pull pin to ground
+;
+; keep in mind that if you are applying a non-zero voltage to more than one pin, all of those voltages
+; must be the same
+
+; the following setpinvoltage sets OBD pin 1 to ground, which is needed to enable logging on older Mitsubishis
+; it is commented out as it is not needed for newer models (e.g. EVO 8/9)
+;
+; setpinvoltage=1,-2
+
+paramname=TPS
+paramid=0x17
+scalingrpn=x,0.39215686,*
+
+paramname=RPM
+paramid=0x21
+scalingrpn=x,31.25,*
+
+paramname=TimingAdv
+paramid=0x06
+scalingrpn=x,20,-
+
+paramname=Load
+paramid=0x41
+scalingrpn=x,1.3,*
+
+paramname=IAT
+paramid=0x11
+scalingrpn=x,1.8,*,40,-
+
+paramname=Boost
+paramid=0x38
+scalingrpn=x,0.19347,*,14.25,-
+
+paramname=WBO2
+paramid=0x12
+scalingrpn=x,0.05859,*,7.35,+
+
+paramname=WGDC
+paramid=0x86
+scalingrpn=x,0.39215686,*
+
+paramname=KnockSum
+paramid=0x26
+priority=2

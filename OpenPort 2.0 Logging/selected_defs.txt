@@ -1,0 +1,266 @@
+14.7/(1+(x*.00003051758))
+
+
+14.7,1,x,0.00003051758,*,+,/
+
+
+
+; --- Logging parameters from definition:
+
+
+;        <parameter id="E83" livedata="selected" units="%"/>
+;		<ecuparam id="E83" name="A/F Learning #1 (2-byte)**" desc="E83-Current A/F Learning being applied. Higher resolution then the standard SSM A/F Learning #1 parameter." target="1">
+;		<address length="2">0xFF5304</address>
+;		<conversion units="%" expr="(x*.04882812)-50" format="0.00"/>
+
+	paramname = A/F_Learing_#1(%)
+		; Current A/F Learning being applied. Higher resolution then the standard SSM A/F Learning #1
+		paramid = 0xFF5304
+		databits = 16
+		scalingrpn = x,0.04882812,*,50,-
+	
+	
+
+;        <parameter id="E85" livedata="selected" units="estimated AFR"/>
+;		<ecuparam id="E85" name="Primary Open Loop Map Enrichment (2-byte)**" desc="E85-Primary enrichment value based on the Primary Open Loop Fueling table(s) Note: this value is NOT the final fueling target." target="1">
+;		<address length="2">0xFF5306</address>
+;		<conversion units="estimated AFR" expr="14.7/(1+(x*.00003051758))" format="0.00"/>
+;		<conversion units="lambda" expr="1/(1+(x*.00003051758))" format="0.00"/>
+;		<conversion units="fuel-air equivalence ratio" expr="1+(x*.00003051758)" format="0.00"/>
+
+	paramname = Primary_Open_Loop_Map_Enrichment(AFR)
+		; Primary enrichment value based on the Primary Open Loop Fueling table(s) Note: this value is NOT the final fueling target.
+		paramid = 0xFF5306
+		databits = 16
+		scalingrpn = 14.7,1,x,0.00003051758,*,+,/
+
+
+
+;        <parameter id="E87" livedata="selected" units="g/rev"/>
+;		<ecuparam id="E87" name="Engine Load (2-byte)**" desc="E87-This is the current engine load (g/rev) as determined by the ECU." target="1">
+;		<address length="2">0xFF530C</address>
+;		<conversion units="g/rev" expr="x*.00006103516" format="0.00"/>
+
+	paramname = Engine_Load(g/rev)
+		; This is the current engine load (g/rev) as determined by the ECU.
+		paramid = 0xFF530C
+		databits = 16
+		scalingrpn = x,0.00006103516,*
+
+
+
+;        <parameter id="E92" livedata="selected" units="estimated AFR"/>
+;		<ecuparam id="E92" name="A/F Sensor #1 (2-byte)**" desc="E92-A higher precision alternative to the standard SSM A/F Sensor #1 (AFR/lambda) parameter." target="1">
+;		<address length="2">0xFF5322</address>
+;		<conversion units="estimated AFR" expr="(x*.0001220703)*14.7" format="0.00"/>
+;		<conversion units="lambda" expr="x*0.0001220703" format="0.00"/>
+;		<conversion units="fuel-air equivalence ratio" expr="1/(x*0.0001220703)" format="0.00"/>
+
+	paramname = A/F_Sensor_#1_(AFR)
+		; A higher precision alternative to the standard SSM A/F Sensor #1 (AFR/lambda) parameter.
+		paramid = 0xFF5322
+		databits =16
+		scalingrpn = x,0.00179443341,*
+
+
+
+;        <parameter id="E95" livedata="selected" units="degrees"/>
+;		<ecuparam id="E95" name="Fine Learning Knock Correction (1-byte)**" desc="E95-Current learned correction that is being applied which is stored and applied across specific load and rpm ranges." target="1">
+;		<address>0xFF5337</address>
+;		<conversion units="degrees" expr="(x*.3515625)-45" format="0.00" gauge_min="-12" gauge_max="8" gauge_step="2"/>
+
+	paramname = Fine_Learning_Knock_Correction(deg)
+		; Current learned correction that is being applied which is stored and applied across specific load and rpm ranges.
+		paramid = 0xFF5337
+		databits = 8
+		scalingrpn = x,0.3515625,*,45,-
+
+
+***** NEED TO DETERMINE BITS LENGTH, PROBABLY OVERLOAD LOGGER AND SEE HOW MUCH BIT ERROR CHANGES WHEN ADDING *****
+;        <parameter id="P89" livedata="selected" units="%"/>
+;		<parameter id="P89" name="A/F Correction #3 (32-bit ECU)" desc="P89" ecubyteindex="15" ecubit="3" target="1">
+;		<address>0x0000D0</address>
+;		<conversion units="%" expr="(x*.078125)-5" format="0.00" gauge_min="-20" gauge_max="20" gauge_step="5"/>
+
+	paramname = A/F_Correction_#3(%)
+		; A/F Correction #3 (32-bit ECU)
+		paramid = 0x0000D0
+		databits = 8
+		scalingrpn = x,0.078125,*,5,-
+
+
+***** NEED TO DETERMINE BITS LENGTH, PROBABLY OVERLOAD LOGGER AND SEE HOW MUCH BIT ERROR CHANGES WHEN ADDING *****
+;        <parameter id="E33" livedata="selected" units="status"/>
+;		<ecuparam id="E33" name="CL/OL Fueling*" desc="E33-Fuel system status. [8 = CL (normal)][10 = OL (normal)][7 = OL insufficient ECT][14 = OL due to system failure]" target="1">
+;		<address>0xFF6F91</address>
+;		<conversion units="status" expr="x+6" format="0" gauge_min="6" gauge_max="16" gauge_step="2"/>
+
+	paramname = CL/OL_Fueling(status)
+		; Fuel system status. [8 = CL (normal)][10 = OL (normal)][7 = OL insufficient ECT][14 = OL due to system failure]
+		paramid = 0xFF6F91
+		databits = 8
+		scalingrpn = x,6,+
+
+
+***** NEED TO DETERMINE BITS LENGTH, PROBABLY OVERLOAD LOGGER AND SEE HOW MUCH BIT ERROR CHANGES WHEN ADDING *****
+***** NEED DESCRIPTION FROM LOGGER *****
+;        <parameter id="P12" livedata="selected" units="g/s"/>
+;		<parameter id="P12" name="Mass Airflow" desc="P12" ecubyteindex="9" ecubit="4" target="1">
+;		<address length="2">0x000013</address>
+;		<conversion units="g/s" expr="x/100" format="0.00" gauge_min="0" gauge_max="400" gauge_step="20"/>
+
+	paramname = MAF(g/sec)
+		;
+		paramid = 0x000013
+		databits = 16
+		scalingrpn = x,0.01,*
+
+
+
+;        <parameter id="P13" livedata="selected" units="%"/>
+;		<parameter id="P13" name="Throttle Opening Angle" desc="P13-Engine throttle opening angle." ecubyteindex="9" ecubit="3" target="1">
+;		<address>0x000015</address>
+;		<conversion units="%" expr="x*100/255" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="P18" livedata="selected" units="V"/>
+;		<parameter id="P18" name="Mass Airflow Sensor Voltage" desc="P18" ecubyteindex="10" ecubit="6" target="3">
+;		<address>0x00001D</address>
+;		<conversion units="V" expr="x/50" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E44" livedata="selected" units="%"/>
+;		<ecuparam id="E44" name="A/F Learning #1 A (Stored)*" desc="E44-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range." target="1">
+;		<address length="4">0xFF2618</address>
+;		<conversion units="%" storagetype="float" expr="x*100" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E46" livedata="selected" units="%"/>
+;		<ecuparam id="E46" name="A/F Learning #1 C (Stored)*" desc="E46-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range." target="1">
+;		<address length="4">0xFF2628</address>
+;		<conversion units="%" storagetype="float" expr="x*100" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E45" livedata="selected" units="%"/>
+;		<ecuparam id="E45" name="A/F Learning #1 B (Stored)*" desc="E45-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range." target="1">
+;		<address length="4">0xFF2620</address>
+;		<conversion units="%" storagetype="float" expr="x*100" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E47" livedata="selected" units="%"/>
+;		<ecuparam id="E47" name="A/F Learning #1 D (Stored)*" desc="E47-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range." target="1">
+;		<address length="4">0xFF2630</address>
+;		<conversion units="%" storagetype="float" expr="x*100" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E114" livedata="selected" units="count"/>
+;		<ecuparam id="E114" name="Knock Sum*" desc="E114-Knock event counter, determined by the ECU, after an execution with no knock event, this counter is incremented." target="1">
+;		<address>0xFF5CEC</address>
+;		<conversion units="count" expr="x" format="0"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E115" livedata="selected" units="estimated AFR"/>
+;		<ecuparam id="E115" name="Primary Enrichment Final (4-byte)*" desc="E115-This is the Primary Open Loop Map Enrichment value with the minimum warm-up enrichment factors applied. Not Final." target="1">
+;		<address length="4">0xFF55CC</address>
+;		<conversion units="estimated AFR" storagetype="float" expr="14.7/(1+x)" format="0.00"/>
+;		<conversion units="lambda" storagetype="float" expr="1/(1+x)" format="0.00"/>
+;		<conversion units="fuel-air equivalence ratio" storagetype="float" expr="1+x" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E61" livedata="selected" units="offset"/>
+;		<ecuparam id="E61" name="A/F Learning Airflow Range (Current)*" desc="E61-Current stored A/F Learning index position. A value of 1-4 corresponds to airflow ranges A-D respectively." target="1">
+;		<address>0xFF5799</address>
+;		<conversion units="offset" expr="x+1" format="0"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E122" livedata="selected" units="estimated AFR"/>
+;		<ecuparam id="E122" name="Closed Loop Fueling Target (2-byte)*" desc="E122-This is the closed loop fueling lambda target which is used in determining short-term corrections (A/F Correction #1)." target="1">
+;		<address length="2">0xFF5328</address>
+;		<conversion units="lambda" expr="x*0.0001220703" format="0.00"/>
+;		<conversion units="estimated AFR" expr="x*.001794433" format="0.00"/>
+;		<conversion units="fuel-air equivalence ratio" expr="1/(x*0.0001220703)" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+
+;        <parameter id="E124" livedata="selected" units="estimated AFR"/>
+;		<ecuparam id="E124" name="Final Fueling Base (2-byte)*" desc="E124-This is the final fueling multiplier after corrections are applied but before per injector compensation." target="1">
+;		<address length="2">0xFF530A</address>
+;		<conversion units="lambda" expr="1/(x*.0004882812)" format="0.00"/>
+;		<conversion units="estimated AFR" expr="14.7/(x*.0004882812)" format="0.00"/>
+;		<conversion units="fuel-air equivalence ratio" expr="x*.0004882812" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
+
+
+		
+;        <parameter id="E82" livedata="selected" units="%"/>
+;		<ecuparam id="E82" name="A/F Correction #1 (2-byte)**" desc="E82-A higher precision alternative to the standard SSM A/F Correction #1 parameter." target="1">
+;		<address length="2">0xFF5300</address>
+;		<conversion units="%" expr="(x*.01220703)-100" format="0.00"/>
+
+	paramname = 
+		paramid = 
+		databits =
+		scalingrpn =
