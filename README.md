@@ -12,7 +12,7 @@
 
 - OBD Pins 8, 12, and 16 can be read via ADC.
 - OBD pins can be set manually to ground or a voltage using [setpinvoltage=X(Pin),(-2:GND)(-1:HighImp)(5000-25000:mV)] (Not sure on how this is implemented or where yet).
-- OP2.0 can read serial on the 2.5mm jack (ring) using type=ascii.
+- OP2.0 can read serial on the 2.5mm jack (ring) using type=ascii (Though I can't seem to get it working...).
 
 ## Switches are read in the same way a parameter is read except that it will return up to 8 individual ON/OFF flags in the individual bits of the return byte. 
 ```
